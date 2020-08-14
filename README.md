@@ -1,13 +1,16 @@
 #
 
-#
+## Install
 
+```bash
+npm install --only=dev
+```
 
 ## Instructions
 
 
 ```bash
-node test
+npm test
 ```
 
 Basics

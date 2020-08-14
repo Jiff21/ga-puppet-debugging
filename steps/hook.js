@@ -1,6 +1,6 @@
 /*eslint no-console: ["error", { allow: ["log"] }] */
 // Dependencies
-const { After, Before, AfterAll } = require('cucumber');
+const { After, Before, AfterAll, Status} = require('cucumber');
 const scope = require('./support/scope');
 
 // Here is where you might clean up database tables to have a clean slate before the tests run
@@ -25,8 +25,12 @@ Before(async () => {
 });
 
 // Here we clean up the browser session
-After(async () => {
+After(async (feature) => {
   if (scope.browser && scope.context.page) {
+    if (feature.result.status === Status.FAILED) {
+      name = feature.pickle.name.replace(/\s+/g, '-').toLowerCase()
+      await scope.context.page.screenshot({ path: './screenshots/failures/' + name + '.png'})
+    }
     const cookies = await scope.context.page.cookies();
     if (cookies && cookies.length > 0) {
       await scope.context.page.deleteCookie(...cookies);

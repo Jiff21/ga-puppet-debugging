@@ -19,7 +19,7 @@ When('I enter {string}', async function testCase(text) {
 
 When('I click submit', { timeout: 60 * 1000 }, async function testCase() {
   await scope.context.page.waitFor('input[type="submit"')
-  // await scope.context.page.click('input[type="submit"]')
+  await scope.context.page.click('input[type="submit"]')
   // Working around click error.
   await scope.context.page.evaluate(()=>document.querySelector('input[type="submit"]').click())
 })

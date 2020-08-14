@@ -1,32 +1,30 @@
 {
-  "name": "browser-checks-starter",
+  "name": "ga-checker",
   "version": "1.0.0",
-  "description": "Get started with writing browser checks for Checkly",
+  "description": "a behave clone with a google analytics checker",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-    "cucumber": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps"
+    "test": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps",
+    "example": "echo \"Error: no example specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/checkly/browser-checks-starter.git"
   },
   "keywords": [
-    "checkly",
+    "google analytics",
     "puppeteer",
-    "mocha"
+    "cucumber"
   ],
   "author": "Tim Nolet",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/checkly/browser-checks-starter/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/checkly/browser-checks-starter#readme",
-  "dependencies": {
-    "mocha": "^8.1.1",
-    "puppeteer": "^5.2.1"
-  },
+  "homepage": "",
+  "dependencies": {},
   "devDependencies": {
-    "cucumber": "^6.0.5"
+    "cucumber": "^6.0.5",
+    "puppeteer": "^5.2.1"
   }
 }
