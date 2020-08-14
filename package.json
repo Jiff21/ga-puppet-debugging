@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+    "cucumber": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,8 @@
   "dependencies": {
     "mocha": "^8.1.1",
     "puppeteer": "^5.2.1"
+  },
+  "devDependencies": {
+    "cucumber": "^6.0.5"
   }
 }
