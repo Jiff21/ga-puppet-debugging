@@ -1,7 +1,7 @@
 Feature: Example
 
   Scenario: This is a scenario
-    Given I am on google with puppeteer
+    Given I go to "index"
     When I enter "cucumber.js"
       And I click submit
-    Then I should see "cucumber"
+    Then I should see "Cucumber.js"

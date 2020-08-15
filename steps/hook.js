@@ -5,9 +5,18 @@ const scope = require('./support/scope');
 
 // Here is where you might clean up database tables to have a clean slate before the tests run
 Before(async () => {
-  // Defines whether puppeteer runs Chrome in headless mode.
-  let headless = false;
-  let slowMo = 0;
+  /* configurable options or object for puppeteer */
+  const opts = {
+      headless: false,
+      slowMo: 100,
+      timeout: 0,
+      args: [
+        '--start-maximized',
+        '--disable-plugins',
+        '--disable-instant-extended-api'
+      ]
+      // args: ['--start-maximized', '--window-size=1920,1040']
+  }
   // Chrome is set to run headlessly and with no slowdown in CircleCI
   if (process.env.CIRCLECI) headless = true;
   if (process.env.CIRCLECI) slowMo = 2;
@@ -18,7 +27,7 @@ Before(async () => {
 
 
   if (!scope.browser)
-    scope.browser = await scope.driver.launch({ headless, slowMo });
+    scope.browser = await scope.driver.launch(opts);
   scope.context.page = await scope.browser.newPage();
   scope.context.page.setViewport({ width: 1280, height: 1024 });
 
@@ -29,7 +38,9 @@ After(async (feature) => {
   if (scope.browser && scope.context.page) {
     if (feature.result.status === Status.FAILED) {
       name = feature.pickle.name.replace(/\s+/g, '-').toLowerCase()
-      await scope.context.page.screenshot({ path: './screenshots/failures/' + name + '.png'})
+      await scope.context.page.screenshot({
+        path: './screenshots/failures/' + name + '.png'
+      })
     }
     const cookies = await scope.context.page.cookies();
     if (cookies && cookies.length > 0) {

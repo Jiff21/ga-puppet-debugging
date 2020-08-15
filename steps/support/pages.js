@@ -1,6 +1,6 @@
 
 const pages = {
-  home: '/',
+  index: '/',
   login: '/login',
   signup: '/signup',
   'forgot-password': '/forgot-password',
