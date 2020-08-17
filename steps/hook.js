@@ -8,7 +8,7 @@ Before(async () => {
   /* configurable options or object for puppeteer */
   const opts = {
       headless: false,
-      slowMo: 100,
+      slowMo: 1,
       timeout: 0,
       args: [
         '--start-maximized',

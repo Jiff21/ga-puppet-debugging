@@ -1,3 +1,4 @@
+@medium
 Feature: Example
 
   Scenario: This is a scenario
