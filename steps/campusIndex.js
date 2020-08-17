@@ -15,6 +15,8 @@ When('I click the first social icon', {wrapperOptions: { retry: 2 }, timeout: 60
 })
 
 Then('the last GA event {string} should include {string}', async function testCase(type, text) {
+  type = type.toLowerCase();
+  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'url')
   let title = scope.ga_events[scope.ga_events.length - 1][type];
   try{
     assert(title.includes(text));
@@ -23,17 +25,9 @@ Then('the last GA event {string} should include {string}', async function testCa
   }
 })
 
-Then('The last GA event should have the category {string}', async function testCase(text) {
-  let category = scope.ga_events[scope.ga_events.length - 1]['category'];
+Then('The last GA event should have the {string} {string}', async function testCase(type, text) {
+  type = type.toLowerCase();
+  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'url')
+  let category = scope.ga_events[scope.ga_events.length - 1][type];
   assert.equal(category, text, ['The category ' + text + ' did not match '  + category]);
-})
-
-Then('The last GA event should have the action {string}', async function testCase(text) {
-  let action = scope.ga_events[scope.ga_events.length - 1]['action'];
-  assert.equal(action, text, [action]);
-})
-
-Then('The last GA event should have the label {string}', async function testCase(text) {
-  let label = scope.ga_events[scope.ga_events.length - 1]['label'];
-  assert.equal(label, text, [label]);
 })

@@ -80,11 +80,7 @@ Before(async () => {
     if(request.url().includes('google-analytics.com/r/collect')){
       let type = getGaType(request)
       if (type.includes('pageview')){
-        let pageUrl =   getGaPageUrl(request);
-        // let pageTitle = getGaTitle(request);
         scope.ga_events[i] = {
-          'url' : pageUrl,
-          // 'title': pageTitle,
           'type' : 'pageview'
         }
       }else if (type.includes('event')){
@@ -99,10 +95,13 @@ Before(async () => {
         }
 
       }else{
-        console.log('What');
+        console.log('What Happened');
+        assert(false);
       }
       let pageTitle = getGaTitle(request);
       scope.ga_events[i].title = pageTitle;
+      let pageUrl =   getGaPageUrl(request);
+      scope.ga_events[i].url = pageUrl;
       i += i;
     };
   });

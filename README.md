@@ -8,13 +8,18 @@ npm install --only=dev
 
 ## Instructions
 
+Run all tests
 
 ```bash
 npm test
 ```
 
-Basics
-https://medium.com/@anephenix/end-to-end-testing-single-page-apps-and-node-js-apis-with-cucumber-js-and-puppeteer-ad5a519ace0
+Run 1 file.
 
-see for tags
-https://blog.maddevs.io/the-nuances-of-testing-in-pair-cucumber-js-puppeteer-49c3ff2da44c
+```bash
+./node_modules/cucumber/bin/cucumber-js ./features/fileName.feature -r ./steps
+```
+
+
+## Alure Hub
+https://github.com/allure-framework/allure-js/blob/master/packages/allure-cucumberjs/README.md

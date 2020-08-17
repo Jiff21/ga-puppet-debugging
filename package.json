@@ -1,11 +1,10 @@
 {
   "name": "ga-checker",
   "version": "1.0.0",
-  "description": "a behave clone with a google analytics checker",
+  "description": "Cucumberjs that keeps track of google analytics requests",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps",
-    "example": "echo \"Error: no example specified\" && exit 1"
+    "test": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps"
   },
   "repository": {
     "type": "git",
@@ -16,7 +15,7 @@
     "puppeteer",
     "cucumber"
   ],
-  "author": "Tim Nolet",
+  "author": "Jeff Campbell",
   "license": "ISC",
   "bugs": {
     "url": ""
