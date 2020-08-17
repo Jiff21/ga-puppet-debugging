@@ -32,11 +32,7 @@ When('I enter {string}', async function testCase(text) {
 
 
 When('I get data layer', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase() {
-  // scope.context.page.evaluate(async () => {
-  //   let content = await window.dataLayer;
-  //   console.log(content);
-  // });
-  // console.log(content);
+  page.on('window.dataLayer._push', request => console.info());
   const snapshot = await scope.context.page.accessibility.snapshot();
   console.info(snapshot);
 })
@@ -74,6 +70,7 @@ When('I click submit', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, asyn
 })
 
 Then('I should see {string}', async function testCase(text) {
+  console.info(`👉 Response: ${scope.ga_events[scope.ga_events.length - 1]['url']}`)
   await scope.context.page.waitForSelector(all_results_links);
   const links = await scope.context.page.evaluate(() => {
     const anchors = Array.from(document.querySelectorAll('div#search h3'))

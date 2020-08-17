@@ -3,11 +3,51 @@
 const { After, Before, AfterAll, Status} = require('cucumber');
 const scope = require('./support/scope');
 
+const cleanUrl = (text)=> {
+  text = decodeURIComponent(text);
+  return text.replace(/\+/g, '%20');
+}
+
+const getGaType = (obj)=> {
+  const match_pattern = '&t=([^&]+)';
+  return obj.url().match(match_pattern)[1];
+}
+
+const getGaTitle = (obj)=> {
+  const match_pattern = '[?&]dt=([^&]+)';
+  title = obj.url().match(match_pattern)[1];
+  return cleanUrl(title);
+}
+
+const getGaPageUrl = (obj)=> {
+  const match_pattern = 'dl=([^&]+)';
+  title = obj.url().match(match_pattern)[1];
+  return cleanUrl(title);
+}
+
+const getGaEventCategory = (obj)=> {
+  const match_pattern = '[?&]ec=([^&]+)';
+  category = obj.url().match(match_pattern)[1];
+  return cleanUrl(category);
+}
+
+const getGaEventAction = (obj)=> {
+  const match_pattern = '[?&]ea=([^&]+)';
+  action = obj.url().match(match_pattern)[1];
+  return cleanUrl(action);
+}
+
+const getGaEventLabel = (obj)=> {
+  const match_pattern = '[?&]el=([^&]+)';
+  label = obj.url().match(match_pattern)[1];
+  return cleanUrl(label);
+}
+
 // Here is where you might clean up database tables to have a clean slate before the tests run
 Before(async () => {
   /* configurable options or object for puppeteer */
   const opts = {
-      headless: false,
+      headless: true,
       slowMo: 1,
       timeout: 0,
       args: [
@@ -31,6 +71,41 @@ Before(async () => {
   scope.context.page = await scope.browser.newPage();
   scope.context.page.setViewport({ width: 1280, height: 1024 });
 
+  // Set up a list of Goole Analytics Events
+  scope.ga_events = [];
+  let i = 0;
+  scope.context.page.on('request', request => {
+    // console.log(request.url())
+    // Do I need an or 'google-analytics.com/r/collect')){
+    if(request.url().includes('google-analytics.com/r/collect')){
+      let type = getGaType(request)
+      if (type.includes('pageview')){
+        let pageUrl =   getGaPageUrl(request);
+        // let pageTitle = getGaTitle(request);
+        scope.ga_events[i] = {
+          'url' : pageUrl,
+          // 'title': pageTitle,
+          'type' : 'pageview'
+        }
+      }else if (type.includes('event')){
+        ecMatch = getGaEventCategory(request);
+        eaMatch = getGaEventAction(request);
+        elMatch = getGaEventLabel(request);
+        scope.ga_events[i] = {
+          'category' : ecMatch,
+          'action' : eaMatch,
+          'label' : elMatch,
+          'type' : 'event'
+        }
+
+      }else{
+        console.log('What');
+      }
+      let pageTitle = getGaTitle(request);
+      scope.ga_events[i].title = pageTitle;
+      i += i;
+    };
+  });
 });
 
 // Here we clean up the browser session
