@@ -28,6 +28,41 @@ When('I enter {string}', async function testCase(text) {
   await scope.context.page.type(search_selector, text);
 })
 
+
+
+
+When('I get data layer', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase() {
+  // scope.context.page.evaluate(async () => {
+  //   let content = await window.dataLayer;
+  //   console.log(content);
+  // });
+  // console.log(content);
+  const snapshot = await scope.context.page.accessibility.snapshot();
+  console.info(snapshot);
+})
+
+When('I get accessible elements', {timeout: 60 * 1000}, async function testCase() {
+  const snapshot = await scope.context.page.accessibility.snapshot();
+  console.info(snapshot);
+})
+
+
+When('I look at page load times', {timeout: 60 * 1000}, async function testCase() {
+  const metrics = await scope.context.page.evaluate(() => JSON.stringify(window.performance));
+  // console.info(JSON.parse(metrics));
+  let json_m = JSON.parse(metrics);
+  const loadTime = Number(json_m['timing']['domComplete']) - Number(json_m['timing']['responseStart']);
+  console.info(loadTime);
+})
+
+
+
+
+When('I get accessible elements', {timeout: 60 * 1000}, async function testCase() {
+  const snapshot = await scope.context.page.accessibility.snapshot();
+  console.info(snapshot);
+})
+
 // Can define a retry on flaky steps
 When('I click submit', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase() {
   await scope.context.page.waitFor(click_selector);
