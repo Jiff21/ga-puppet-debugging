@@ -16,7 +16,7 @@ When('I click the first social icon', {wrapperOptions: { retry: 2 }, timeout: 60
 
 Then('the last GA event {string} should include {string}', async function testCase(type, text) {
   type = type.toLowerCase();
-  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'url')
+  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
   let title = scope.ga_events[scope.ga_events.length - 1][type];
   try{
     assert(title.includes(text));
@@ -25,9 +25,21 @@ Then('the last GA event {string} should include {string}', async function testCa
   }
 })
 
-Then('The last GA event should have the {string} {string}', async function testCase(type, text) {
+Then('the last GA event should have the {string} {string}', async function testCase(type, text) {
   type = type.toLowerCase();
-  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'url')
-  let category = scope.ga_events[scope.ga_events.length - 1][type];
-  assert.equal(category, text, ['The category ' + text + ' did not match '  + category]);
+  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  let event_result = scope.ga_events[scope.ga_events.length - 1][type];
+  assert(event_result != undefined);
+  assert.equal(event_result, text, ['The ', type, text, 'did not match', event_result]);
+})
+
+Then('the last GA url should be on {string}', async function testCase(text) {
+  let url = scope.ga_events[scope.ga_events.length - 1]['url'];
+  text = text.toLowerCase();
+  let expectedUrl = scope.host + pages[text];
+  try{
+    assert(url.includes(expectedUrl));
+  }catch (err){
+    console.log('Expected:\n"' + expectedUrl + '"\nTo Be part of:\n"' + url + '"')
+  }
 })

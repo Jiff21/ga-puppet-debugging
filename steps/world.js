@@ -9,8 +9,8 @@ const scope = require('./support/scope');
 // const web = require('web');
 
 const World = function() {
-  scope.host = 'https://campus.co';
-  // scope.host = 'https://google.com';
+  // scope.host = 'https://campus.co';
+  scope.host = 'https://google.com';
   scope.driver = puppeteer;
   scope.context = {};
   // And then reference them in the rest of your Cucumber code via this

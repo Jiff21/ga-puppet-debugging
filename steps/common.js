@@ -28,20 +28,16 @@ When('I enter {string}', async function testCase(text) {
   await scope.context.page.type(search_selector, text);
 })
 
-
-
-
-When('I get data layer', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase() {
-  page.on('window.dataLayer._push', request => console.info());
-  const snapshot = await scope.context.page.accessibility.snapshot();
-  console.info(snapshot);
-})
+// When('I get data layer', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase() {
+//   page.on('window.dataLayer._push', request => console.info());
+//   const snapshot = await scope.context.page.accessibility.snapshot();
+//   console.info(snapshot);
+// })
 
 When('I get accessible elements', {timeout: 60 * 1000}, async function testCase() {
   const snapshot = await scope.context.page.accessibility.snapshot();
   console.info(snapshot);
 })
-
 
 When('I look at page load times', {timeout: 60 * 1000}, async function testCase() {
   const metrics = await scope.context.page.evaluate(() => JSON.stringify(window.performance));
@@ -50,9 +46,6 @@ When('I look at page load times', {timeout: 60 * 1000}, async function testCase(
   const loadTime = Number(json_m['timing']['domComplete']) - Number(json_m['timing']['responseStart']);
   console.info(loadTime);
 })
-
-
-
 
 When('I get accessible elements', {timeout: 60 * 1000}, async function testCase() {
   const snapshot = await scope.context.page.accessibility.snapshot();
@@ -70,7 +63,6 @@ When('I click submit', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, asyn
 })
 
 Then('I should see {string}', async function testCase(text) {
-  console.info(`👉 Response: ${scope.ga_events[scope.ga_events.length - 1]['url']}`)
   await scope.context.page.waitForSelector(all_results_links);
   const links = await scope.context.page.evaluate(() => {
     const anchors = Array.from(document.querySelectorAll('div#search h3'))
