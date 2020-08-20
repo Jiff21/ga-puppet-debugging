@@ -36,7 +36,7 @@ Run 1 file.
 
 Allure
 ```
-npm start test2
+npm start allure-test
 ```
 
 For a JUnit Report that can be used in gitlab.
