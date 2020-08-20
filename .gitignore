@@ -1,2 +1,4 @@
 node_modules
 report.xml
+allure/reports/
+allure/results/

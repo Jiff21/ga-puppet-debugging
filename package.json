@@ -4,7 +4,8 @@
   "description": "Cucumberjs that keeps track of google analytics requests",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps"
+    "test": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps",
+    "test2": "./node_modules/.bin/cucumber-js --require-module @babel/register --require-module @babel/polyfill -f json:allure/results/cucumber_report.json -f progress ./features -r ./steps"
   },
   "repository": {
     "type": "git",
@@ -21,9 +22,18 @@
     "url": ""
   },
   "homepage": "",
-  "dependencies": {},
+  "dependencies": {
+    "babel-cli": "^6.26.0"
+  },
   "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/polyfill": "^7.10.4",
+    "@babel/preset-env": "^7.11.0",
+    "allure-cucumberjs": "^2.0.0-beta.7",
     "cucumber": "^6.0.5",
+    "cucumber-html-reporter": "^5.2.0",
     "cucumber-junit-formatter": "^0.2.2",
     "puppeteer": "^5.2.1"
   }

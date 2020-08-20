@@ -22,7 +22,7 @@ npm install --only=dev
 Run all tests
 
 ```bash
-npm test
+npm run test
 ```
 
 Run 1 file.
@@ -34,7 +34,11 @@ Run 1 file.
 For a JUnit Report that can be used in gitlan
 
 ```
-./node_modules/cucumber/bin/cucumber-js ./features/ -r ./steps -f node_modules/cucumber-junit-formatter:report.xml
+./node_modules/cucumber/bin/cucumber-js ./features/ -r ./steps -f node_modules/cucumber-junit-formatter:screenshots/report.xml
+```
+
+```
+node allure/reporter.js
 ```
 
 ## Gotchas

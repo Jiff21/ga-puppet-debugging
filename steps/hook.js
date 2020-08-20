@@ -15,31 +15,31 @@ const getGaType = (obj)=> {
 
 const getGaTitle = (obj)=> {
   const match_pattern = '[?&]dt=([^&]+)';
-  title = obj.url().match(match_pattern)[1];
+  let title = obj.url().match(match_pattern)[1];
   return cleanUrl(title);
 }
 
 const getGaPageUrl = (obj)=> {
   const match_pattern = 'dl=([^&]+)';
-  title = obj.url().match(match_pattern)[1];
+  let title = obj.url().match(match_pattern)[1];
   return cleanUrl(title);
 }
 
 const getGaEventCategory = (obj)=> {
   const match_pattern = '[?&]ec=([^&]+)';
-  category = obj.url().match(match_pattern)[1];
+  let category = obj.url().match(match_pattern)[1];
   return cleanUrl(category);
 }
 
 const getGaEventAction = (obj)=> {
   const match_pattern = '[?&]ea=([^&]+)';
-  action = obj.url().match(match_pattern)[1];
+  let action = obj.url().match(match_pattern)[1];
   return cleanUrl(action);
 }
 
 const getGaEventLabel = (obj)=> {
   const match_pattern = '[?&]el=([^&]+)';
-  label = obj.url().match(match_pattern)[1];
+  let label = obj.url().match(match_pattern)[1];
   return cleanUrl(label);
 }
 
@@ -84,9 +84,9 @@ Before(async () => {
           'type' : 'pageview'
         }
       }else if (type.includes('event')){
-        ecMatch = getGaEventCategory(request);
-        eaMatch = getGaEventAction(request);
-        elMatch = getGaEventLabel(request);
+        let ecMatch = getGaEventCategory(request);
+        let eaMatch = getGaEventAction(request);
+        let elMatch = getGaEventLabel(request);
         scope.ga_events[i] = {
           'category' : ecMatch,
           'action' : eaMatch,
@@ -111,7 +111,7 @@ Before(async () => {
 After(async (feature) => {
   if (scope.browser && scope.context.page) {
     if (feature.result.status === Status.FAILED) {
-      name = feature.pickle.name.replace(/\s+/g, '-').toLowerCase()
+      let name = feature.pickle.name.replace(/\s+/g, '-').toLowerCase()
       await scope.context.page.screenshot({
         path: './screenshots/failures/' + name + '.png'
       })
