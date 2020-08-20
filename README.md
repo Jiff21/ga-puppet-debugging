@@ -31,6 +31,12 @@ Run 1 file.
 ./node_modules/cucumber/bin/cucumber-js ./features/fileName.feature -r ./steps
 ```
 
+For a JUnit Report that can be used in gitlan
+
+```
+./node_modules/cucumber/bin/cucumber-js ./features/ -r ./steps -f node_modules/cucumber-junit-formatter:report.xml
+```
+
 ## Gotchas
 
 If you install node_modules with wrong version of Node, delete the folder and reinstall.
