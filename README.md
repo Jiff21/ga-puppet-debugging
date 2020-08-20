@@ -31,14 +31,24 @@ Run 1 file.
 ./node_modules/cucumber/bin/cucumber-js ./features/fileName.feature -r ./steps
 ```
 
-For a JUnit Report that can be used in gitlan
+
+### Reports
+
+Allure
+```
+npm start test2
+```
+
+For a JUnit Report that can be used in gitlab.
 
 ```
 ./node_modules/cucumber/bin/cucumber-js ./features/ -r ./steps -f node_modules/cucumber-junit-formatter:screenshots/report.xml
 ```
 
+cucumberjs HTML Report
+
 ```
-node allure/reporter.js
+node allure/html-reporter.js
 ```
 
 ## Gotchas
