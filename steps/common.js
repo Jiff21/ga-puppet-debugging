@@ -17,6 +17,30 @@ Given('I go to {string}', { timeout: 60 * 1000 }, async function testCase(page) 
   await scope.context.page.goto(url, {waitUntil: 'networkidle2'})
 })
 
+Given('I reload the page', { timeout: 60 * 1000 }, async function testCase() {
+  await scope.context.page.reload({ waitUntil: ["networkidle0", "domcontentloaded"] });
+})
+
+
+Then('an event has fired where {string} included {string}', async function testCase(type, text) {
+  type = type.toLowerCase();
+  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  let x = 0, event;
+  var truethyness = false;
+  for (x; x < scope.ga_events.length; x++){
+    event = scope.ga_events[x];
+    if (event[type].includes(text)){
+      truethyness = true;
+    }
+  }
+  try{
+    assert(truethyness);
+  }catch (err){
+    console.log('Expected:\n"' + text + '"\n but found no such event')
+  }
+})
+
+
 Then('the last GA event {string} should include {string}', async function testCase(type, text) {
   type = type.toLowerCase();
   assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')

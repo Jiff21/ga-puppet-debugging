@@ -1,7 +1,7 @@
 /*eslint no-console: ["error", { allow: ["log"] }] */
 // Dependencies
 const { After, Before, AfterAll, Status} = require('cucumber');
-const scope = require('./support/scope');
+let scope = require('./support/scope');
 
 const cleanUrl = (text)=> {
   text = decodeURIComponent(text);
@@ -47,7 +47,7 @@ const getGaEventLabel = (obj)=> {
 Before(async () => {
   /* configurable options or object for puppeteer */
   const opts = {
-      headless: true,
+      headless: false,
       slowMo: 1,
       timeout: 0,
       args: [
@@ -75,14 +75,15 @@ Before(async () => {
   scope.ga_events = [];
   let i = 0;
   scope.context.page.on('request', request => {
-    // console.log(request.url())
-    // Do I need an or 'google-analytics.com/r/collect')){
-    if(request.url().includes('google-analytics.com/r/collect')){
+    if(request.url().includes('google-analytics.com/collect?')){
+      // console.debug(request.url())
       let type = getGaType(request)
+      // console.debug(type)
       if (type.includes('pageview')){
         scope.ga_events[i] = {
           'type' : 'pageview'
         }
+        // console.debug(scope.ga_events[i])
       }else if (type.includes('event')){
         ecMatch = getGaEventCategory(request);
         eaMatch = getGaEventAction(request);
@@ -93,16 +94,15 @@ Before(async () => {
           'label' : elMatch,
           'type' : 'event'
         }
-
       }else{
-        console.log('What Happened');
+        console.log('Unknown Event Type');
         assert(false);
       }
       let pageTitle = getGaTitle(request);
       scope.ga_events[i].title = pageTitle;
       let pageUrl =   getGaPageUrl(request);
       scope.ga_events[i].url = pageUrl;
-      i += i;
+      i += 1;
     };
   });
 });
