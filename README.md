@@ -31,6 +31,12 @@ Run 1 file.
 ./node_modules/cucumber/bin/cucumber-js ./features/fileName.feature -r ./steps
 ```
 
+You can run a single scenario by adding the line the scenario starts on to the file path.
+
+```bash
+./node_modules/cucumber/bin/cucumber-js ./features/fileName.feature:4 -r ./steps
+```
+
 For a JUnit Report that can be used in gitlan
 
 ```

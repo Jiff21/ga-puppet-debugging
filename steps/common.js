@@ -10,14 +10,40 @@ const search_selector = 'input[aria-label=Search]';
 const click_selector = 'input[type="submit"]';
 const all_results_links = 'div#search h3';
 
-
 Given('I go to {string}', { timeout: 60 * 1000 }, async function testCase(page) {
   const url = scope.host + pages[page];
   // console.debug('Going to ', url)
-  await scope.context.page.goto(url, {waitUntil: 'networkidle2'})
+  await scope.context.page.goto(url, {waitUntil: 'load'})
+  // await scope.context.page.goto(url, {waitUntil: 'networkidle2'})
 })
 
+Given('I reload the page', { timeout: 60 * 1000 }, async function testCase() {
+  await scope.context.page.reload({ waitUntil: ["networkidle0", "domcontentloaded"] });
+})
+
+
+Then('an event has fired where {string} included {string}', async function testCase(type, text) {
+  assert(scope.ga_events.length > 0)
+  type = type.toLowerCase();
+  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  let x = 0, event;
+  var truethyness = false;
+  for (x; x < scope.ga_events.length; x++){
+    event = scope.ga_events[x];
+    if (event[type].includes(text)){
+      truethyness = true;
+    }
+  }
+  try{
+    assert(truethyness);
+  }catch (err){
+    console.log('Expected:\n"' + text + '"\n but found no such event')
+  }
+})
+
+
 Then('the last GA event {string} should include {string}', async function testCase(type, text) {
+  assert(scope.ga_events.length > 0)
   type = type.toLowerCase();
   assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
   let title = scope.ga_events[scope.ga_events.length - 1][type];
@@ -29,6 +55,7 @@ Then('the last GA event {string} should include {string}', async function testCa
 })
 
 Then('the last GA event should have the {string} {string}', async function testCase(type, text) {
+  assert(scope.ga_events.length > 0)
   type = type.toLowerCase();
   assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
   let event_result = scope.ga_events[scope.ga_events.length - 1][type];
@@ -37,6 +64,7 @@ Then('the last GA event should have the {string} {string}', async function testC
 })
 
 Then('the last GA url should be on {string}', async function testCase(text) {
+  assert(scope.ga_events.length > 0)
   let url = scope.ga_events[scope.ga_events.length - 1]['url'];
   text = text.toLowerCase();
   let expectedUrl = scope.host + pages[text];
