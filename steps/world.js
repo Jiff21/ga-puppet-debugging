@@ -12,7 +12,7 @@ const World = function() {
   if (process.env.HOST == undefined) {
      throw new Error('HOST is not defined. Please set environmental variable');
   };
-  scope.host = 'https://' + process.env.HOST
+  scope.host = 'https://' + process.env.HOST;
   scope.driver = puppeteer;
   scope.context = {};
   // And then reference them in the rest of your Cucumber code via this
