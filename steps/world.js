@@ -9,8 +9,10 @@ const scope = require('./support/scope');
 // const web = require('web');
 
 const World = function() {
+  if (process.env.HOST == undefined) {
+     throw new Error('HOST is not defined. Please set environmental Variable');
+  }
   scope.host = 'https://' + process.env.HOST
-
   scope.driver = puppeteer;
   scope.context = {};
   // And then reference them in the rest of your Cucumber code via this
