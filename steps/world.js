@@ -10,8 +10,8 @@ const scope = require('./support/scope');
 
 const World = function() {
   if (process.env.HOST == undefined) {
-     throw new Error('HOST is not defined. Please set environmental Variable');
-  }
+     throw new Error('HOST is not defined. Please set environmental variable');
+  };
   scope.host = 'https://' + process.env.HOST
   scope.driver = puppeteer;
   scope.context = {};
