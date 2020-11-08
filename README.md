@@ -16,12 +16,13 @@ nvm use 10.16.3
 ```bash
 npm install --only=dev
 ```
-
-## Instructions
+`
+## Instructions`
 
 Run all tests
 
 ```bash
+source settings/prod.env
 npm test
 ```
 
