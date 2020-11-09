@@ -37,16 +37,42 @@ You can run a single scenario by adding the line the scenario starts on to the f
 ./node_modules/cucumber/bin/cucumber-js ./features/fileName.feature:4 -r ./steps
 ```
 
-For a JUnit Report that can be used in gitlan
+## Reports
+
+### Alure Hub
+
+https://github.com/allure-framework/allure-js/blob/master/packages/allure-cucumberjs/README.md
+
+`npm i allure-cucumberjs --save-dev` installed in normal npm dev install.
+
+To Run:
+
+```
+./node_modules/cucumber/bin/cucumber-js ./features -r ./steps --format ./allure/reporter.js
+allure generate allure/data/results -o allure/data/reports
+allure open allure/data/reports
+```
+
+Copy History locally
+
+```
+rm -R allure/data/results/*
+cp -R allure/data/reports/history/ allure/data/results/history
+```
+
+### Junit
+
+For a JUnit Report that can be used in gitlab
 
 ```
 ./node_modules/cucumber/bin/cucumber-js ./features/ -r ./steps -f node_modules/cucumber-junit-formatter:report.xml
 ```
 
+Or use this formatter.
+https://www.npmjs.com/package/cucumber-html-reporter
+
+
+
 ## Gotchas
 
 If you install node_modules with wrong version of Node, delete the folder and reinstall.
-
-
-## Alure Hub
-https://github.com/allure-framework/allure-js/blob/master/packages/allure-cucumberjs/README.md
