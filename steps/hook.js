@@ -57,9 +57,16 @@ Before(async () => {
       ]
       // args: ['--start-maximized', '--window-size=1920,1040']
   }
+
+  // abiliy to pass Headless from command line.
+  if (process.env.HEADLESS)
+    opts['headless'] = true;
+    opts['slowMo'] = 2;
+
   // Chrome is set to run headlessly and with no slowdown in CircleCI
-  if (process.env.CIRCLECI) headless = true;
-  if (process.env.CIRCLECI) slowMo = 2;
+  if (process.env.CircleCI)
+    opts['headless'] = true;
+    opts['slowMo'] = 2;
 
   const pending = callback => {
     callback(null, 'pending');

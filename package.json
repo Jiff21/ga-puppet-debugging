@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps --parallel 15",
-    "report": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps --format ./allure/reporter.js"
+    "report": "HEADLESS=1 ./node_modules/cucumber/bin/cucumber-js ./features -r ./steps --format ./allure/reporter.js"
   },
   "repository": {
     "type": "git",
