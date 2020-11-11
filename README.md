@@ -15,8 +15,9 @@ nvm use 10.16.3
 
 ```bash
 npm install --only=dev
+brew install allure
 ```
-`
+
 ## Instructions`
 
 Run all tests
@@ -42,24 +43,22 @@ You can run a single scenario by adding the line the scenario starts on to the f
 
 ### Alure Hub
 
-https://github.com/allure-framework/allure-js/blob/master/packages/allure-cucumberjs/README.md
-
-`npm i allure-cucumberjs --save-dev` installed in normal npm dev install.
-
 To Run:
 
 ```
-./node_modules/cucumber/bin/cucumber-js ./features -r ./steps --format ./allure/reporter.js
+npm run report
 allure generate allure/data/results -o allure/data/reports
 allure open allure/data/reports
 ```
 
-Copy History locally
+Copy History locally:
 
 ```
 rm -R allure/data/results/*
 cp -R allure/data/reports/history/ allure/data/results/history
 ```
+
+* Cannot run report in [parallel](https://github.com/cucumber/cucumber-js/issues/1038).
 
 ### Junit
 

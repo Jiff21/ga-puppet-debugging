@@ -4,7 +4,8 @@
   "description": "Cucumberjs that keeps track of google analytics requests",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps --parallel 15"
+    "test": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps --parallel 15",
+    "report": "./node_modules/cucumber/bin/cucumber-js ./features -r ./steps --format ./allure/reporter.js"
   },
   "repository": {
     "type": "git",
