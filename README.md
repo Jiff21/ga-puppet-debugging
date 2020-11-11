@@ -47,7 +47,7 @@ To Run:
 
 ```
 npm run report
-allure generate allure/data/results -o allure/data/reports
+allure generate allure/data/results -o allure/data/reports --clean
 allure open allure/data/reports
 ```
 
