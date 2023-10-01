@@ -6,7 +6,7 @@ const pages = require('./support/pages');
 const scope = require('./support/scope');
 
 // Page Locator map
-const first_social = '.h-c-social__item';
+const first_social = '.glue-social__link';
 
 // Can define a retry on flaky steps
 When('I click the first social icon', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase() {
