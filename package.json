@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/checkly/browser-checks-starter.git"
+    "url": "git+https://github.com/Jiff21/ga-puppet-debugging"
   },
   "keywords": [
     "google analytics",
@@ -22,11 +22,10 @@
     "url": ""
   },
   "homepage": "",
-  "dependencies": {},
   "devDependencies": {
     "allure-cucumberjs": "^2.0.0-beta.8",
     "cucumber": "^6.0.5",
     "cucumber-junit-formatter": "^0.2.2",
-    "puppeteer": "^5.2.1"
+    "puppeteer": "^21.3.6"
   }
 }

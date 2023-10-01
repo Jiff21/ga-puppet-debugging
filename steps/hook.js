@@ -54,7 +54,8 @@ Before(async () => {
         '--start-maximized',
         '--disable-plugins',
         '--disable-instant-extended-api'
-      ]
+      ],
+      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
       // args: ['--start-maximized', '--window-size=1920,1040']
   }
 

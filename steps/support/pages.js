@@ -3,9 +3,7 @@ const pages = {
   index: '/',
   login: '/login',
   signup: '/signup',
-  'forgot-password': '/forgot-password',
-  account: '/account',
-  'reset-password': token => `/reset-password/${token}`
+  london: '/london/'
 };
 
 module.exports = pages;

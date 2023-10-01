@@ -9,6 +9,7 @@ const scope = require('./support/scope');
 const search_selector = 'input[aria-label=Search]';
 const click_selector = 'input[type="submit"]';
 const all_results_links = 'div#search h3';
+const footer_selector = 'footer'
 
 Given('I go to {string}', { timeout: 60 * 1000 }, async function testCase(page) {
   const url = scope.host + pages[page];
@@ -42,7 +43,7 @@ Then('an event has fired where {string} included {string}', async function testC
 })
 
 
-Then('the last GA event {string} should include {string}', async function testCase(type, text) {
+Then('the last GA event {string} should include {string}', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase(type, text,) {
   assert(scope.ga_events.length > 0)
   type = type.toLowerCase();
   assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
@@ -78,12 +79,16 @@ Then('the last GA url should be on {string}', async function testCase(text) {
 // Names are globally unique, seems to not care if you use this as a When too.
 Given('I wait {int} seconds', { timeout: 60 * 1000 }, async function testCase(number) {
   let wait = number * 1000;
-  await scope.context.page.waitFor(wait);
+  await scope.context.page.waitForTimeout(wait);
 })
 
 When('I enter {string}', async function testCase(text) {
-  await scope.context.page.waitFor(search_selector);
+  await scope.context.page.waitForSelector(search_selector);
   await scope.context.page.type(search_selector, text);
+})
+
+When('I wait for the footer', async function testCase() {
+  await scope.context.page.waitForSelector(footer_selector);
 })
 
 // When('I get data layer', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase() {
@@ -112,7 +117,7 @@ When('I get accessible elements', {timeout: 60 * 1000}, async function testCase(
 
 // Can define a retry on flaky steps
 When('I click submit', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase() {
-  await scope.context.page.waitFor(click_selector);
+  await scope.context.page.waitForSelector(click_selector);
   // await scope.context.page.click('input[type="submit"]')
   // Working around click error.
   await scope.context.page.evaluate((click_selector)=>
@@ -131,7 +136,7 @@ Then('I should see {string}', async function testCase(text) {
   assert(el != undefined);
   // Single string would be
   // assert(links.includes(text));
-  // This fixes undefined but not acutually woorking
+  // This fixes undefined but not actually woorking
   // const links = await scope.context.page.evaluate((all_results_links) => {
   //   const anchors = Array.from(document.querySelectorAll(all_results_links))
   //   return anchors.map(anchor => anchor.textContent)
