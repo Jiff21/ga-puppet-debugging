@@ -47,16 +47,23 @@ const getGaEventLabel = (obj)=> {
 Before(async () => {
   /* configurable options or object for puppeteer */
   const opts = {
-      headless: false,
-      slowMo: 1,
-      timeout: 0,
-      args: [
-        '--start-maximized',
+    args: [
+        '--disable-dev-shm-usage',
+        '--disable-infobars',
+        '--disable-instant-extended-api',
         '--disable-plugins',
-        '--disable-instant-extended-api'
+        '--disable-setuid-sandbox',
+        '--enable-feature=NetworkService',
+        '--ignore-certificate-errors',
+        '--no-sandbox',
+        '--start-maximized'
       ],
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-      // args: ['--start-maximized', '--window-size=1920,1040']
+      dumpio: true,
+      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      headless: false,
+      ignoreHTTPSErrors: true,
+      slowMo: 1,
+      timeout: 0
   }
 
   // abiliy to pass Headless from command line.
@@ -76,17 +83,23 @@ Before(async () => {
 
   if (!scope.browser)
     scope.browser = await scope.driver.launch(opts);
-  scope.context.page = await scope.browser.newPage();
+  // This works to open a single page.
+  scope.context.page = await scope.browser.targets()[scope.browser.targets().length-1].page();
+  // But opening 2 tabs helps avoid a freeze sometimes according to comments
+  // let scope.context.page = await scope.browser.newPage();
   scope.context.page.setViewport({ width: 1280, height: 1024 });
 
   // Set up a list of Goole Analytics Events
   scope.ga_events = [];
   let i = 0;
+  await scope.context.page.setRequestInterception(true);
   scope.context.page.on('request', request => {
-    if(request.url().includes('google-analytics.com/collect?')){
-      // console.debug(request.url())
+    if(!request.url().includes('google-analytics.com/collect?')){
+      request.continue();
+    } else {
+      console.debug(request.url())
       let type = getGaType(request)
-      // console.debug(type)
+      console.debug(type)
       if (type.includes('pageview')){
         scope.ga_events[i] = {
           'type' : 'pageview'
@@ -111,6 +124,7 @@ Before(async () => {
       let pageUrl =   getGaPageUrl(request);
       scope.ga_events[i].url = pageUrl;
       i += 1;
+      request.continue()
     };
   });
 });
