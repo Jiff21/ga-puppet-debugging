@@ -7,8 +7,8 @@ This is a Google Analytics regression testing setup, using [puppeteer](https://g
 Node and hopefully nvm
 
 ```bash
-nvm install 10.16.3
-nvm use 10.16.3
+nvm install 20.3.0
+nvm use 20.3.0
 ```
 
 ## Install
@@ -17,6 +17,8 @@ nvm use 10.16.3
 npm install --only=dev
 brew install allure
 ```
+
+Set executablePath to chrome in hook.js
 
 ## Instructions`
 
