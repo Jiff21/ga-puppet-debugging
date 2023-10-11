@@ -22,11 +22,10 @@ Given('I reload the page', { timeout: 60 * 1000 }, async function testCase() {
   await scope.context.page.reload({ waitUntil: ["networkidle0", "domcontentloaded"] });
 })
 
-
 Then('an event has fired where {string} included {string}', async function testCase(type, text) {
   assert(scope.ga_events.length > 0)
   type = type.toLowerCase();
-  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  assert(type == 'name' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
   let x = 0, event;
   var truethyness = false;
   for (x; x < scope.ga_events.length; x++){
@@ -46,7 +45,7 @@ Then('an event has fired where {string} included {string}', async function testC
 Then('the last GA event {string} should include {string}', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase(type, text,) {
   assert(scope.ga_events.length > 0)
   type = type.toLowerCase();
-  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  assert(type == 'name' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
   let title = scope.ga_events[scope.ga_events.length - 1][type];
   try{
     assert(title.includes(text));
@@ -58,7 +57,7 @@ Then('the last GA event {string} should include {string}', {wrapperOptions: { re
 Then('the last GA event should have the {string} {string}', async function testCase(type, text) {
   assert(scope.ga_events.length > 0)
   type = type.toLowerCase();
-  assert(type == 'category' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  assert(type == 'name' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
   let event_result = scope.ga_events[scope.ga_events.length - 1][type];
   assert(event_result != undefined);
   assert.equal(event_result, text, ['The ', type, text, 'did not match', event_result]);

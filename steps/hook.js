@@ -8,10 +8,17 @@ const cleanUrl = (text)=> {
   return text.replace(/\+/g, '%20');
 }
 
-const getGaType = (obj)=> {
-  const match_pattern = '&t=([^&]+)';
+const getEventName = (obj)=> {
+  const match_pattern = '&en=([^&]+)';
   return obj.url().match(match_pattern)[1];
 }
+
+const getPercentScrollled = (obj)=> {
+  const match_pattern = '&ep\.percent_scrolled=([^&]+)';
+  return obj.url().match(match_pattern)[1];
+}
+
+
 
 const getGaTitle = (obj)=> {
   const match_pattern = '[?&]dt=([^&]+)';
@@ -25,23 +32,6 @@ const getGaPageUrl = (obj)=> {
   return cleanUrl(title);
 }
 
-const getGaEventCategory = (obj)=> {
-  const match_pattern = '[?&]ec=([^&]+)';
-  category = obj.url().match(match_pattern)[1];
-  return cleanUrl(category);
-}
-
-const getGaEventAction = (obj)=> {
-  const match_pattern = '[?&]ea=([^&]+)';
-  action = obj.url().match(match_pattern)[1];
-  return cleanUrl(action);
-}
-
-const getGaEventLabel = (obj)=> {
-  const match_pattern = '[?&]el=([^&]+)';
-  label = obj.url().match(match_pattern)[1];
-  return cleanUrl(label);
-}
 
 // Here is where you might clean up database tables to have a clean slate before the tests run
 Before(async () => {
@@ -80,7 +70,6 @@ Before(async () => {
     callback(null, 'pending');
   };
 
-
   if (!scope.browser)
     scope.browser = await scope.driver.launch(opts);
   // This works to open a single page.
@@ -94,35 +83,19 @@ Before(async () => {
   let i = 0;
   await scope.context.page.setRequestInterception(true);
   scope.context.page.on('request', request => {
-    if(!request.url().includes('google-analytics.com/collect?')){
+    if(!request.url().includes('google-analytics.com/g/collect?' )){
       request.continue();
     } else {
-      console.debug(request.url())
-      let type = getGaType(request)
-      console.debug(type)
-      if (type.includes('pageview')){
-        scope.ga_events[i] = {
-          'type' : 'pageview'
-        }
-        // console.debug(scope.ga_events[i])
-      }else if (type.includes('event')){
-        ecMatch = getGaEventCategory(request);
-        eaMatch = getGaEventAction(request);
-        elMatch = getGaEventLabel(request);
-        scope.ga_events[i] = {
-          'category' : ecMatch,
-          'action' : eaMatch,
-          'label' : elMatch,
-          'type' : 'event'
-        }
-      }else{
-        console.log('Unknown Event Type');
-        assert(false);
+      let name = getEventName(request);
+      // let percentScrolled = getPercentScrollled(request);
+      scope.ga_events[i] = {
+        'name' : name,
+        'type' : 'event'
       }
-      let pageTitle = getGaTitle(request);
-      scope.ga_events[i].title = pageTitle;
-      let pageUrl =   getGaPageUrl(request);
-      scope.ga_events[i].url = pageUrl;
+      // let pageTitle = getGaTitle(request);
+      // scope.ga_events[i].title = pageTitle;
+      // let pageUrl =   getGaPageUrl(request);
+      // scope.ga_events[i].url = pageUrl;
       i += 1;
       request.continue()
     };
