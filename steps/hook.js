@@ -13,6 +13,11 @@ const getEventName = (obj)=> {
   return obj.url().match(match_pattern)[1];
 }
 
+const getPageViewEventName = (obj)=> {
+  const match_pattern = '&en=([^&]+)';
+  return obj.url().match(match_pattern)[1];
+}
+
 const getPercentScrollled = (obj)=> {
   const match_pattern = '&ep\.percent_scrolled=([^&]+)';
   return obj.url().match(match_pattern)[1];
@@ -85,12 +90,16 @@ Before(async () => {
   scope.context.page.on('request', request => {
     if(!request.url().includes('google-analytics.com/g/collect?' )){
       request.continue();
+    } else if(!request.url().includes('google-analytics.com/j/collect?' )){
+      let name = getPageViewEventName(request);
+      scope.ga_events[i] = {'name' : name}
+      i += 1;
+      request.continue()
     } else {
       let name = getEventName(request);
       // let percentScrolled = getPercentScrollled(request);
       scope.ga_events[i] = {
         'name' : name,
-        'type' : 'event'
       }
       // let pageTitle = getGaTitle(request);
       // scope.ga_events[i].title = pageTitle;
