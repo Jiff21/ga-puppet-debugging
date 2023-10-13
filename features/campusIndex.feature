@@ -4,9 +4,17 @@ Feature: Site Name Homepage analytics continue to function
   Scenario: Page Load analytics work
     Given I go to "index"
       And I wait for the footer
-    Then the last GA event "name" should include "pageview"
+    Then an event has fired where "name" included "pageview"
+      And an event has fired where "title" included "Google for Startups Campus - A Global Community of Startups"
 
   Scenario: Social Analytics use correct event category, event action and event label
     Given I go to "index"
     When I click the first social icon
-    Then an event has fired where "name" included "Outbound Clicks"
+    Then an event has fired where "name" included "outbound_click"
+      And an event has fired where "link url" included "twitter.com"
+
+  Scenario: Clicking on the Google Logo fires and outbound click
+    Given I go to "index"
+      And I click the Google logo in the footer
+    Then an event has fired where "name" included "outbound_click"
+      And an event has fired where "title" included "Google for Startups Campus - A Global Community of Startups"

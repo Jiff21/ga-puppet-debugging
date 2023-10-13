@@ -11,9 +11,25 @@ const click_selector = 'input[type="submit"]';
 const all_results_links = 'div#search h3';
 const footer_selector = 'footer'
 
+let checkSupportedParameters = (text)=> {
+  eventValue = [
+    'name',
+    'title',
+    'link_url',
+    'url',
+    'percent_scrolled'
+  ]
+  assert(eventValue.includes(text))
+}
+
+let normalizeParameterType = (text)=> {
+  return text.toLowerCase().replace(' ', '_')
+}
+
+
 Given('I go to {string}', { timeout: 60 * 1000 }, async function testCase(page) {
   const url = scope.host + pages[page];
-  // console.debug('Going to ', url)
+  console.debug('Going to ', url);
   await scope.context.page.goto(url, {waitUntil: 'load'})
   // await scope.context.page.goto(url, {waitUntil: 'networkidle2'})
 })
@@ -24,40 +40,39 @@ Given('I reload the page', { timeout: 60 * 1000 }, async function testCase() {
 
 Then('an event has fired where {string} included {string}', async function testCase(type, text) {
   assert(scope.ga_events.length > 0)
-  type = type.toLowerCase();
-  assert(type == 'name' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  type = normalizeParameterType(type);
+  // console.debug('Looking for a GA event of this type: ' + type)
+  checkSupportedParameters(type);
   let x = 0, event;
   var truethyness = false;
   for (x; x < scope.ga_events.length; x++){
+    // console.debug('Keys are ' + Object.keys(scope.ga_events[x]))
     event = scope.ga_events[x];
-    if (event[type].includes(text)){
-      truethyness = true;
+    try{
+      if (event[type].includes(text)){
+        truethyness = true;
+      }
+    } catch{
+      // console.info(event['name'] + ' did not have the parameter ' + type);
+      continue;
     }
   }
-  try{
-    assert(truethyness);
-  }catch (err){
-    console.log('Expected:\n"' + text + '"\n but found no such event')
-  }
+  assert(truethyness);
 })
 
 
 Then('the last GA event {string} should include {string}', {wrapperOptions: { retry: 2 }, timeout: 60 * 1000 }, async function testCase(type, text,) {
   assert(scope.ga_events.length > 0)
-  type = type.toLowerCase();
-  assert(type == 'name' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  type = normalizeParameterType(type);
+  checkSupportedParameters(type);
   let title = scope.ga_events[scope.ga_events.length - 1][type];
-  try{
-    assert(title.includes(text));
-  }catch (err){
-    console.log('Expected:\n"' + title + '"\nGot:\n"' + text + '"')
-  }
+  assert(title.includes(text));
 })
 
 Then('the last GA event should have the {string} {string}', async function testCase(type, text) {
   assert(scope.ga_events.length > 0)
-  type = type.toLowerCase();
-  assert(type == 'name' || type == 'label' || type == 'action' || type == 'title' || type == 'type')
+  type = normalizeParameterType(type);
+  checkSupportedParameters(type);
   let event_result = scope.ga_events[scope.ga_events.length - 1][type];
   assert(event_result != undefined);
   assert.equal(event_result, text, ['The ', type, text, 'did not match', event_result]);
@@ -68,11 +83,7 @@ Then('the last GA url should be on {string}', async function testCase(text) {
   let url = scope.ga_events[scope.ga_events.length - 1]['url'];
   text = text.toLowerCase();
   let expectedUrl = scope.host + pages[text];
-  try{
-    assert(url.includes(expectedUrl));
-  }catch (err){
-    console.log('Expected:\n"' + expectedUrl + '"\nTo Be part of:\n"' + url + '"')
-  }
+  assert(url.includes(expectedUrl));
 })
 
 // Names are globally unique, seems to not care if you use this as a When too.

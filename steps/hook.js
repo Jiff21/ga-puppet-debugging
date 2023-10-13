@@ -1,6 +1,7 @@
 /*eslint no-console: ["error", { allow: ["log"] }] */
 // Dependencies
 const { After, Before, AfterAll, Status} = require('cucumber');
+const { connect } = require('puppeteer');
 let scope = require('./support/scope');
 
 const cleanUrl = (text)=> {
@@ -9,21 +10,33 @@ const cleanUrl = (text)=> {
 }
 
 const getEventName = (obj)=> {
+  // console.debug("Getting event name");
   const match_pattern = '&en=([^&]+)';
   return obj.url().match(match_pattern)[1];
 }
 
-const getPageViewEventName = (obj)=> {
+const checkforEventName = (obj)=> {
   const match_pattern = '&en=([^&]+)';
-  return obj.url().match(match_pattern)[1];
+  return obj.url().match(match_pattern)
+}
+
+const getPageViewEventName = (obj)=> {
+  const match_pattern = '&t=([^&]+)';
+  let pageViewEvent = obj.url().match(match_pattern);
+  if (pageViewEvent != null) {
+    // console.debug('setting pageViewEvent');
+    return pageViewEvent[1]
+  }
 }
 
 const getPercentScrollled = (obj)=> {
   const match_pattern = '&ep\.percent_scrolled=([^&]+)';
-  return obj.url().match(match_pattern)[1];
+  let scrollPercent = obj.url().match(match_pattern);
+  if (scrollPercent != null) {
+    // console.debug('setting scrollPercent');
+    return scrollPercent[1]
+  }
 }
-
-
 
 const getGaTitle = (obj)=> {
   const match_pattern = '[?&]dt=([^&]+)';
@@ -33,8 +46,19 @@ const getGaTitle = (obj)=> {
 
 const getGaPageUrl = (obj)=> {
   const match_pattern = 'dl=([^&]+)';
-  title = obj.url().match(match_pattern)[1];
-  return cleanUrl(title);
+  pageUrl = obj.url().match(match_pattern);
+  if (pageUrl != null) {
+    return cleanUrl(pageUrl[1]);
+  }
+}
+
+const getLinkUrl = (obj)=> {
+  const match_pattern = '&ep\.link_url=([^&]+)';
+  linkUrl = obj.url().match(match_pattern);
+  if (linkUrl != null) {
+    // console.debug('setting linkURL');
+    return cleanUrl(linkUrl[1]);
+  }
 }
 
 
@@ -78,9 +102,9 @@ Before(async () => {
   if (!scope.browser)
     scope.browser = await scope.driver.launch(opts);
   // This works to open a single page.
-  scope.context.page = await scope.browser.targets()[scope.browser.targets().length-1].page();
+  // scope.context.page = await scope.browser.targets()[scope.browser.targets().length-1].page();
   // But opening 2 tabs helps avoid a freeze sometimes according to comments
-  // let scope.context.page = await scope.browser.newPage();
+  scope.context.page = await scope.browser.newPage();
   scope.context.page.setViewport({ width: 1280, height: 1024 });
 
   // Set up a list of Goole Analytics Events
@@ -88,23 +112,31 @@ Before(async () => {
   let i = 0;
   await scope.context.page.setRequestInterception(true);
   scope.context.page.on('request', request => {
-    if(!request.url().includes('google-analytics.com/g/collect?' )){
+    if (!request.url().includes('google-analytics.com') || !request.url().includes('collect?') ) {
       request.continue();
-    } else if(!request.url().includes('google-analytics.com/j/collect?' )){
+    } else if (checkforEventName(request) == null) {
+      // console.debug('Name only event')
       let name = getPageViewEventName(request);
       scope.ga_events[i] = {'name' : name}
       i += 1;
       request.continue()
     } else {
+      // console.debug('Has Event Name')
       let name = getEventName(request);
-      // let percentScrolled = getPercentScrollled(request);
       scope.ga_events[i] = {
         'name' : name,
       }
-      // let pageTitle = getGaTitle(request);
-      // scope.ga_events[i].title = pageTitle;
-      // let pageUrl =   getGaPageUrl(request);
-      // scope.ga_events[i].url = pageUrl;
+      // get scroll percentage if it exists
+      let percentScrolled = getPercentScrollled(request);
+      scope.ga_events[i].percent_scrolled = percentScrolled;
+      // get title if it exist
+      let pageTitle = getGaTitle(request);
+      scope.ga_events[i].title = pageTitle;
+      // get page url from event
+      let pageUrl = getGaPageUrl(request);
+      scope.ga_events[i].url = pageUrl;
+      let linkUrl = getLinkUrl(request);
+      scope.ga_events[i].link_url = linkUrl;
       i += 1;
       request.continue()
     };
