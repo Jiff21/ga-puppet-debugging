@@ -114,10 +114,12 @@ When('I get accessible elements', {timeout: 60 * 1000}, async function testCase(
 
 When('I look at page load times', {timeout: 60 * 1000}, async function testCase() {
   const metrics = await scope.context.page.evaluate(() => JSON.stringify(window.performance));
-  // console.info(JSON.parse(metrics));
   let json_m = JSON.parse(metrics);
-  const loadTime = Number(json_m['timing']['domComplete']) - Number(json_m['timing']['responseStart']);
-  console.info(loadTime);
+  scope.context.loadTime = Number(json_m['timing']['domComplete']) - Number(json_m['timing']['responseStart']);
+})
+
+When('the page load time should less than {int} seconds', async function testCase(seconds) {
+  assert(scope.context.loadTime < seconds * 1000);
 })
 
 When('I get accessible elements', {timeout: 60 * 1000}, async function testCase() {
