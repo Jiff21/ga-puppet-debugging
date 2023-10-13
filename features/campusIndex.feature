@@ -7,7 +7,7 @@ Feature: Site Name Homepage analytics continue to function
     Then an event has fired where "name" included "pageview"
       And an event has fired where "title" included "Google for Startups Campus - A Global Community of Startups"
 
-  Scenario: Social Analytics use correct event category, event action and event label
+  Scenario: Social buttons tracked as outbound click
     Given I go to "index"
     When I click the first social icon
     Then an event has fired where "name" included "outbound_click"
